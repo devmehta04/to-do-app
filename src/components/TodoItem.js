@@ -1,10 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories }) => {
+const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories = [] }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editText, setEditText] = useState(todo.text);
-  const [editCategory, setEditCategory] = useState(todo.category);
-  const [editDueDate, setEditDueDate] = useState(todo.dueDate || '');
+  const [editText, setEditText] = useState('');
+  const [editCategory, setEditCategory] = useState('');
+  const [editDueDate, setEditDueDate] = useState('');
+
+  // Update local state when todo changes
+  useEffect(() => {
+    setEditText(todo.text || '');
+    setEditCategory(todo.category || 'Other');
+    setEditDueDate(todo.dueDate || '');
+  }, [todo]);
 
   const handleEdit = () => {
     if (editText.trim()) {
@@ -22,18 +29,24 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories }) => {
     if (e.key === 'Enter') {
       handleEdit();
     } else if (e.key === 'Escape') {
-      setEditText(todo.text);
-      setEditCategory(todo.category);
-      setEditDueDate(todo.dueDate || '');
-      setIsEditing(false);
+      cancelEdit();
     }
   };
 
   const startEdit = () => {
     setIsEditing(true);
-    setEditText(todo.text);
-    setEditCategory(todo.category);
+    // Ensure we have the current values
+    setEditText(todo.text || '');
+    setEditCategory(todo.category || 'Other');
     setEditDueDate(todo.dueDate || '');
+  };
+
+  const cancelEdit = () => {
+    // Reset to original values
+    setEditText(todo.text || '');
+    setEditCategory(todo.category || 'Other');
+    setEditDueDate(todo.dueDate || '');
+    setIsEditing(false);
   };
 
   const formatDueDate = (dateString) => {
@@ -64,6 +77,9 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories }) => {
     return 'upcoming';
   };
 
+  // Ensure we have valid categories to work with
+  const validCategories = Array.isArray(categories) && categories.length > 0 ? categories : ['Other'];
+
   return (
     <div className={`todo-item ${todo.completed ? 'completed' : ''}`}>
       <button
@@ -91,6 +107,7 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories }) => {
               className="edit-input"
               autoFocus
               maxLength="100"
+              placeholder="Enter task text..."
             />
             <div className="edit-options">
               <select
@@ -98,7 +115,7 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories }) => {
                 onChange={(e) => setEditCategory(e.target.value)}
                 className="edit-category"
               >
-                {categories.map(cat => (
+                {validCategories.map(cat => (
                   <option key={cat} value={cat}>{cat}</option>
                 ))}
               </select>
@@ -110,6 +127,23 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories }) => {
                 min={new Date().toISOString().split('T')[0]}
               />
             </div>
+            <div className="edit-actions">
+              <button
+                type="button"
+                className="save-btn"
+                onClick={handleEdit}
+                disabled={!editText.trim()}
+              >
+                Save
+              </button>
+              <button
+                type="button"
+                className="cancel-btn"
+                onClick={cancelEdit}
+              >
+                Cancel
+              </button>
+            </div>
           </div>
         ) : (
           <div className="todo-details">
@@ -120,8 +154,8 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories }) => {
               {todo.text}
             </span>
             <div className="todo-meta">
-              <span className={`category-tag ${todo.category.toLowerCase()}`}>
-                {todo.category}
+              <span className={`category-tag ${todo.category?.toLowerCase() || 'other'}`}>
+                {todo.category || 'Other'}
               </span>
               {todo.dueDate && (
                 <span className={`due-date ${getDueDateClass(todo.dueDate)}`}>
@@ -151,7 +185,7 @@ const TodoItem = ({ todo, onToggle, onDelete, onEdit, categories }) => {
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
             <polyline points="3,6 5,6 21,6"></polyline>
-            <path d="M19,6v14a2,2 0 0,1 -2,2H7a2,2 0 0,1 -2,-2V6m3,0V4a2,2 0 0,1 2,-2h4a2,2 0 0,1 2,2v2"></path>
+            <path d="M19,6v14a2,2 0 0 1 -2,2H7a2,2 0 0 1 -2,-2V6m3,0V4a2,2 0 0 1 2,-2h4a2,2 0 0 1 2,2v2"></path>
           </svg>
         </button>
       </div>

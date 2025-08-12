@@ -94,8 +94,8 @@ function App() {
   });
 
   // Get unique categories from existing todos
-  const existingCategories = [...new Set(todos.map(todo => todo.category))];
-  const allCategories = [...new Set([...categories, ...existingCategories])];
+  const existingCategories = todos.map(todo => todo.category).filter(Boolean);
+  const allCategories = [...new Set([...categories, ...existingCategories])].filter(Boolean);
 
   return (
     <div className="App">

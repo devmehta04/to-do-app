@@ -711,6 +711,7 @@ body {
 .edit-options {
   display: flex;
   gap: 10px;
+  margin-bottom: 15px;
 }
 
 .edit-category,
@@ -726,6 +727,49 @@ body {
 .edit-due-date:focus {
   outline: none;
   border-color: #667eea;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.save-btn,
+.cancel-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.save-btn {
+  background: #667eea;
+  color: white;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: #5a6fd8;
+  transform: translateY(-1px);
+}
+
+.save-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cancel-btn {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.cancel-btn:hover {
+  background: #e0e0e0;
+  transform: translateY(-1px);
 }
 
 .todo-actions {
@@ -929,6 +973,17 @@ body {
   .edit-options {
     flex-direction: column;
     gap: 8px;
+  }
+  
+  .edit-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .save-btn,
+  .cancel-btn {
+    width: 100%;
+    padding: 10px 16px;
   }
 }
 

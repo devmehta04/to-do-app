@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import TodoItem from './TodoItem';
 
-const TodoList = ({ todos, onToggle, onDelete, onEdit }) => {
+const TodoList = ({ todos, onToggle, onDelete, onEdit, categories = [] }) => {
   if (todos.length === 0) {
     return (
       <div className="empty-state">
@@ -21,6 +21,7 @@ const TodoList = ({ todos, onToggle, onDelete, onEdit }) => {
           onToggle={onToggle}
           onDelete={onDelete}
           onEdit={onEdit}
+          categories={categories}
         />
       ))}
     </div>

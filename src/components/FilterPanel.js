@@ -7,9 +7,12 @@ const FilterPanel = ({
   onCategoryChange, 
   filter, 
   onFilterChange, 
-  categories 
+  categories = [] 
 }) => {
   if (!isOpen) return null;
+
+  // Ensure we have valid categories to work with
+  const validCategories = Array.isArray(categories) && categories.length > 0 ? categories : [];
 
   return (
     <div className="filter-panel-overlay" onClick={onClose}>
@@ -83,7 +86,7 @@ const FilterPanel = ({
               />
               <span className="filter-label">All Categories</span>
             </label>
-            {categories.map(category => (
+            {validCategories.map(category => (
               <label key={category} className="filter-option">
                 <input
                   type="radio"
